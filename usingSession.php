@@ -15,12 +15,11 @@
  </form>
 
 <?php
-
-  $id = $_POST['inputID'];
-  $pw = $_POST['inputPW'];
-   if(login($id, $pw)) {   //보통 비밀번호는 세션에 저장안함.
-     $_SESSION["id"] = $id;
-   }
- $_SESSION["pw"] = $pw;
- $_SESSION["name"] = "홍길동";
+    $id = $_POST['inputID'];
+    $pw = $_POST['inputPW'];
+     if(login($id, $pw)) {   //보통 비밀번호는 세션에 저장안함.
+       $_SESSION["id"] = $id;
+     }
+     $_SESSION["pw"] = $pw;
+     $_SESSION["name"] = "홍길동";
 ?>
