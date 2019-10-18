@@ -1,20 +1,24 @@
+<?php
+  include_once './config.php';
+?>
+
 <!DOCTYPE html>
 <html>
-<head> 
+<head>
 <meta charset="utf-8">
 <title>PHP 프로그래밍 입문</title>
 <link rel="stylesheet" type="text/css" href="./css/common.css">
 <link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
-<body> 
+<body>
 	<header>
-    	<?php include "header.php";?>
+    	<?php include_once "header.php";?>
     </header>
 	<section>
-	    <?php include "main.php";?>
-	</section> 
+	    <?php include_once "main.php";?>
+	</section>
 	<footer>
-    	<?php include "footer.php";?>
+    	<?php include_once "footer.php";?>
     </footer>
 </body>
 </html>

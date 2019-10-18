@@ -1,3 +1,7 @@
+<?php
+  include_once './config.php';
+?>
+
         <div id="main_img_bar">
             <img src="./img/main_img.png">
         </div>
@@ -44,7 +48,7 @@
     {
         while( $row = mysqli_fetch_array($result) )
         {
-            $name  = $row["name"];        
+            $name  = $row["name"];
             $id    = $row["id"];
             $point = $row["point"];
             $name = mb_substr($name, 0, 1)." * ".mb_substr($name, 2, 1);
