@@ -1,15 +1,28 @@
+<?php
+    include once "./db/db_cnn.php";
+
+    //현재 페이지 번호를 확인
+    if (isset($_GET["page"]))
+      $page = $_GET["page"];   // 1,2,3,4,5
+    else
+      $page = 1;
+
+    $mode = !empty($_GET["mode"]) ?   $mode = $_GET["mode"] : $mode=""  ;
+    $scale = 10;  // 한 페이지당 10개 목록만 보기
+ ?>
+
 <!DOCTYPE html>
 <html>
-<head> 
+<head>
 <meta charset="utf-8">
 <title>PHP 프로그래밍 입문</title>
 <link rel="stylesheet" type="text/css" href="./css/common.css">
 <link rel="stylesheet" type="text/css" href="./css/message.css">
 </head>
-<body> 
+<body>
 <header>
     <?php include "header.php";?>
-</header>  
+</header>
 <section>
 	<div id="main_img_bar">
         <img src="./img/main_img.png">
@@ -17,12 +30,6 @@
    	<div id="message_box">
 	    <h3>
 <?php
- 		if (isset($_GET["page"]))
-			$page = $_GET["page"];
-		else
-			$page = 1;
-
-		$mode = $_GET["mode"];
 
 		if ($mode=="send")
 			echo "송신 쪽지함 > 목록보기";
@@ -36,7 +43,7 @@
 					<span class="col1">번호</span>
 					<span class="col2">제목</span>
 					<span class="col3">
-<?php						
+<?php
 						if ($mode=="send")
 							echo "받은이";
 						else
@@ -46,7 +53,7 @@
 					<span class="col4">등록일</span>
 				</li>
 <?php
-	$con = mysqli_connect("localhost", "user1", "12345", "sample");
+	// $con = mysqli_connect("localhost", "user1", "12345", "sample");
 
 	if ($mode=="send")
 		$sql = "select * from message where send_id='$userid' order by num desc";
@@ -54,26 +61,26 @@
 		$sql = "select * from message where rv_id='$userid' order by num desc";
 
 	$result = mysqli_query($con, $sql);
-	$total_record = mysqli_num_rows($result); // 전체 글 수
+	$total_record = mysqli_num_rows($result); // 전체 글 수   14개씩 검섹
 
-	$scale = 10;
 
-	// 전체 페이지 수($total_page) 계산 
-	if ($total_record % $scale == 0)     
-		$total_page = floor($total_record/$scale);      
+	// 전체 페이지 수($total_page) 계산
+	if ($total_record % $scale == 0)
+		$total_page = floor($total_record/$scale);
 	else
-		$total_page = floor($total_record/$scale) + 1; 
- 
-	// 표시할 페이지($page)에 따라 $start 계산  
-	$start = ($page - 1) * $scale;      
+		$total_page = floor($total_record/$scale) + 1;
 
-	$number = $total_record - $start;
+	// 표시할 페이지($page)에 따라 $start 계산
+	$start = ($page - 1) * $scale;         // if page=1 >>> $start =0, if page2 >>> $start=10
 
+	$number = $total_record - $start;      // 14 - 0 = 14
+    // ($i =0;            $i < 10;                         $i++)
    for ($i=$start; $i<$start+$scale && $i < $total_record; $i++)
    {
-      mysqli_data_seek($result, $i);
+      mysqli_data_seek($result, $i);    // 만약 $i=0;  >>  0번지로 이동
       // 가져올 레코드로 위치(포인터) 이동
-      $row = mysqli_fetch_array($result);
+      $row = mysqli_fetch_array($result);   // 만약 $i=0;  >>  0번지로 이동     >> 레코드를 $row 배열에 담아라
+      // $row의 값을 첨자배열의 형태로 가져옴.
       // 하나의 레코드 가져오기
 	  $num    = $row["num"];
 	  $subject     = $row["subject"];
@@ -83,32 +90,34 @@
 	  	$msg_id = $row["rv_id"];
 	  else
 	  	$msg_id = $row["send_id"];
-	  
+
 	  $result2 = mysqli_query($con, "select name from members where id='$msg_id'");
 	  $record = mysqli_fetch_array($result2);
-	  $msg_name     = $record["name"];	  
+	  $msg_name     = $record["name"];
 ?>
 				<li>
 					<span class="col1"><?=$number?></span>
 					<span class="col2"><a href="message_view.php?mode=<?=$mode?>&num=<?=$num?>"><?=$subject?></a></span>
 					<span class="col3"><?=$msg_name?>(<?=$msg_id?>)</span>
 					<span class="col4"><?=$regist_day?></span>
-				</li>	
+				</li>
 <?php
    	   $number--;
    }
    mysqli_close($con);
 ?>
 	    	</ul>
-			<ul id="page_num"> 	
+			<ul id="page_num">
 <?php
-	if ($total_page>=2 && $page >= 2)	
+  // "◀ 이전"이라고 표시 할 것인지 판단.
+	if ($total_page>=2 && $page >= 2)    //토탈 페이지가 2 이상이고, 현재 페이지가 2 이상이면,  "◀ 이전" 표시.
 	{
 		$new_page = $page-1;
 		echo "<li><a href='message_box.php?mode=$mode&page=$new_page'>◀ 이전</a> </li>";
-	}		
-	else 
+	}
+	else
 		echo "<li>&nbsp;</li>";
+  // "◀ 이전" 판단 끝.
 
    	// 게시판 목록 하단에 페이지 링크 번호 출력
    	for ($i=1; $i<=$total_page; $i++)
@@ -122,22 +131,22 @@
 			echo "<li> <a href='message_box.php?mode=$mode&page=$i'> $i </a> <li>";
 		}
    	}
-   	if ($total_page>=2 && $page != $total_page)		
+   	if ($total_page>=2 && $page != $total_page)   // 토탈페이지가 2 이상, but 현재페이지가 토탈페이지 전이라면
    	{
-		$new_page = $page+1;	
+		$new_page = $page+1;
 		echo "<li> <a href='message_box.php?mode=$mode&page=$new_page'>다음 ▶</a> </li>";
 	}
-	else 
+	else    // 현재 페이지가 마지막 페이지라면 "다음 ▶"이 필요업죠.
 		echo "<li>&nbsp;</li>";
 ?>
-			</ul> <!-- page -->	    	
+			</ul> <!-- page -->
 			<ul class="buttons">
 				<li><button onclick="location.href='message_box.php?mode=rv'">수신 쪽지함</button></li>
 				<li><button onclick="location.href='message_box.php?mode=send'">송신 쪽지함</button></li>
 				<li><button onclick="location.href='message_form.php'">쪽지 보내기</button></li>
 			</ul>
 	</div> <!-- message_box -->
-</section> 
+</section>
 <footer>
     <?php include "footer.php";?>
 </footer>

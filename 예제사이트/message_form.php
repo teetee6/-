@@ -1,10 +1,18 @@
+<?php
+  include_once './config.php';
+?>
+
 <!DOCTYPE html>
 <html>
-<head> 
+<head>
 <meta charset="utf-8">
 <title>PHP 프로그래밍 입문</title>
-<link rel="stylesheet" type="text/css" href="./css/common.css">
-<link rel="stylesheet" type="text/css" href="./css/message.css">
+<link rel="stylesheet" type="text/css" href="./css/common.css?var=<?=$sys['var']?>">
+<link rel="stylesheet" type="text/css" href="./css/message.css?var=<?=$sys['var']?>">
+<!-- link태그가 한번 실행되고나서 쿠키에 저장이 된다(크롬에서).
+서버에서 아무리 css파일 정보를 수정해도 클라이언트측의 이미 저장된 쿠키로 인해 업데이트가 안되게 된다.
+업데이트 될때마다 이 쿠키값을 수정시켜서 업데이트를 적용시킬수 있는 trick이다. -->
+<script src="./js/jquery-1.10.2.js?var=<?=$sys['var']?>"></script>
 <script>
   function check_input() {
   	  if (!document.message_form.rv_id.value)
@@ -21,7 +29,7 @@
       }
       if (!document.message_form.content.value)
       {
-          alert("내용을 입력하세요!");    
+          alert("내용을 입력하세요!");
           document.message_form.content.focus();
           return;
       }
@@ -29,10 +37,10 @@
    }
 </script>
 </head>
-<body> 
+<body>
 <header>
     <?php include "header.php";?>
-</header>  
+</header>
 <?php
 	if (!$userid )
 	{
@@ -62,16 +70,16 @@
 				<li>
 					<span class="col1">보내는 사람 : </span>
 					<span class="col2"><?=$userid?></span>
-				</li>	
+				</li>
 				<li>
 					<span class="col1">수신 아이디 : </span>
 					<span class="col2"><input name="rv_id" type="text"></span>
-				</li>	
+				</li>
 	    		<li>
 	    			<span class="col1">제목 : </span>
 	    			<span class="col2"><input name="subject" type="text"></span>
-	    		</li>	    	
-	    		<li id="text_area">	
+	    		</li>
+	    		<li id="text_area">
 	    			<span class="col1">내용 : </span>
 	    			<span class="col2">
 	    				<textarea name="content"></textarea>
@@ -79,10 +87,10 @@
 	    		</li>
 	    	    </ul>
 	    	    <button type="button" onclick="check_input()">보내기</button>
-	    	</div>	    	
+	    	</div>
 	    </form>
 	</div> <!-- message_box -->
-</section> 
+</section>
 <footer>
     <?php include "footer.php";?>
 </footer>

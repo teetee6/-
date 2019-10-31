@@ -48,6 +48,7 @@
      });
    });
 
+   //여기서 이렇게 확인하는작업을 "validate"라고 함.
    function check_input()
    {
       // document.member_form.id.value == $("#id").val()
